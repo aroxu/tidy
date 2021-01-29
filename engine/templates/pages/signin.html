@@ -1,0 +1,30 @@
+<html>
+  <head>
+    {{template "header.html"}}
+    <script>
+      window.onload = () => {
+        document.getElementById("submitBtn").onclick = async () => {
+          const name = document.getElementById("name").value
+          const password = document.getElementById("password").value
+          try {
+            const res = await axios.post("/signin", {
+             name, password
+           })
+           window.location.href= "/app"
+          }catch(e) {
+            alert(e)
+          }
+        }
+      }
+    </script>
+  </head>
+  <body>
+      <div id="form">
+          <label>Name</label>
+          <input id="name" name="name"></input>
+          <label>Password</label>
+          <input id="password" name="password"></input>
+          <button id="submitBtn">SignIn</button>
+      </div>
+  </body>
+</html>

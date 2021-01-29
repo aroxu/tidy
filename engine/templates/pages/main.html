@@ -1,0 +1,10 @@
+<html>
+  <head>
+    {{template "header.html"}}
+  </head>
+  <body>
+    {{ range $d := .folder}}
+    <div>{{$d.Name}}</div>
+    {{end}}
+  </body>
+</html>
