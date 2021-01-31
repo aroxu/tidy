@@ -1,6 +1,6 @@
 # Tidy
 
-Tiny Tidy WebServer with GUI. For WebServer / File Sharing purpose.
+Tiny Tidy WebServer with GUI / CLI. For WebServer / File Sharing purpose.
 
 ### WARNING
 
