@@ -2,6 +2,8 @@
 
 Tiny Tidy WebServer with GUI / CLI. For WebServer / File Sharing purpose.
 
+I would like to express my great thanks to [@gangjun06](https://github.com/gangjun06) for helping me to create the engine.
+
 ### WARNING
 
 I strongly recommend you to change the config file.
