@@ -19,6 +19,7 @@ engine/engine
 engine/engine.exe
 
 engine/build/
+engine/data
 
 .vscode
 manager/pubspec.lock
