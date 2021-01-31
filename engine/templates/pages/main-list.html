@@ -1,0 +1,40 @@
+<html>
+  <head>
+    {{template "header.html"}}
+  </head>
+  <body>
+    {{template "navbar.html" .isAuth}}
+    <main class="container-xxl mt-4">
+      <div class="table bg-white rounded border-0 shadow-sm p-2">
+        <table class="table mb-0">
+          <thead>
+            <tr>
+              <th scope="col">Index</th>
+              <th scope="col">Name</th>
+              <th scope="col">Size</th>
+              <th scope="col">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {{ range $i, $d := .info}} {{$qname := queryEscape $d.name}}
+            <tr>
+              <th scope="row">{{ add $i 1}}</th>
+              <td>
+                {{if $d.isDir}}<a href="/app/{{$.id}}?path={{pathJoin $.curPath $qname}}"> {{$d.name}}</a
+                >{{else}}{{$d.name}}{{end}}
+              </td>
+              <td>{{if $d.isDir}}_{{else}}{{$d.size}}{{end}}</td>
+              <td>
+                <a
+                  href="/app/{{ $.id }}/{{if $d.isDir}}folder?path={{pathJoin $.curPath $qname}}{{else}}download?path={{pathJoin $.curPath $qname}}{{end}} "
+                  ><span class="material-icons">get_app</span></a
+                >
+              </td>
+            </tr>
+            {{end}}
+          </tbody>
+        </table>
+      </div>
+    </main>
+  </body>
+</html>

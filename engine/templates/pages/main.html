@@ -1,10 +1,30 @@
 <html>
   <head>
-    {{template "header.html"}}
+    {{template "header.html" }}
   </head>
   <body>
-    {{ range $d := .folder}}
-    <div>{{$d.Name}}</div>
-    {{end}}
+    {{template "navbar.html" .isAuth}}
+    <main class="container-xxl mt-4">
+      <div class="table bg-white rounded border-0 shadow-sm p-2">
+        <table class="table mb-0">
+          <thead>
+            <tr>
+              <th scope="col">Index</th>
+              <th scope="col">Name</th>
+              <th scope="col">Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            {{ range $i, $d := .folder}}
+            <tr>
+              <th scope="row">{{ add $i 1}}</th>
+              <td><a href="/app/{{$d.ID}}">{{$d.Name}}</a></td>
+              <td>{{$d.Description}}</td>
+            </tr>
+            {{end}}
+          </tbody>
+        </table>
+      </div>
+    </main>
   </body>
 </html>

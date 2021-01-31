@@ -2,15 +2,22 @@ package main
 
 import (
 	"fmt"
+	"html/template"
 	"log"
+	"math/rand"
 	"net/http"
+	"net/url"
 	"os"
+	"path"
+	"path/filepath"
 	"runtime"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/aroxu/tidy-engine/config"
 	"github.com/aroxu/tidy-engine/routes"
+	"github.com/aroxu/tidy-engine/utils"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-contrib/sessions/cookie"
 	"github.com/gin-gonic/gin"
@@ -40,12 +47,45 @@ func (p *program) Start(s service.Service) error {
 	return nil
 }
 func (p *program) run(dataDirPath string) error {
+	rand.Seed(time.Now().Unix())
 	fmt.Println("loading File..")
 	if err := config.Load(dataDirPath); err != nil {
 		log.Fatal(err)
 	}
 
+	templateAdd := func(a, b int) (int, error) {
+		return a + b, nil
+	}
+	templateCurYear := func() (string, error) {
+		return time.Now().Format("2006"), nil
+	}
+	templateServiceName := func() (string, error) {
+		return config.Config.Name, nil
+	}
+	templateQueryEscape := func(str string) (string, error) {
+		return url.QueryEscape(str), nil
+	}
+	templatePathJoin := func(str1, str2 string) (string, error) {
+		return path.Join(str1, str2), nil
+	}
+	templatePathBase := func(path string) (string, error) {
+		return filepath.Base(path), nil
+	}
+	templateIsAuthEnable := func() (bool, error) {
+		return config.Config.EnableAuth, nil
+	}
+
 	r := gin.Default()
+	funcMap := template.FuncMap{
+		"add":          templateAdd,
+		"curYear":      templateCurYear,
+		"serviceName":  templateServiceName,
+		"queryEscape":  templateQueryEscape,
+		"pathJoin":     templatePathJoin,
+		"pathBase":     templatePathBase,
+		"isAuthEnable": templateIsAuthEnable,
+	}
+	r.SetFuncMap(funcMap)
 	r.LoadHTMLGlob(dataDirPath + "templates/*/*.html")
 	store := cookie.NewStore([]byte("secret"))
 	r.Use(sessions.Sessions("mysession", store))
@@ -120,6 +160,11 @@ func main() {
 			log.Fatal(err)
 		}
 		return
+	case "init":
+		if err := utils.InitData(); err != nil {
+			log.Fatal(err)
+		}
+		return
 	case "status":
 		status, err := s.Status()
 		if err != nil {
@@ -137,10 +182,10 @@ func main() {
 		}
 		return
 
-	case "dataDirPath", "":
+	case "dataDirPath":
 
 	default:
-		fmt.Println("tidy (install|uninstall|start|stop|status|dataDirPath path/to/data/dir/)")
+		fmt.Println("engine (install|uninstall|start|stop|status|dataDirPath path/to/data/dir/|init)")
 		return
 	}
 

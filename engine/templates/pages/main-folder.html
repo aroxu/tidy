@@ -1,0 +1,29 @@
+<html>
+  <head>
+    {{template "header.html"}}
+    <script>
+      window.onload = () => {
+        const fetch = async () => {
+          const reqUrl = document.getElementById('reqUrl').value
+          const fileName = document.getElementById('fileName').value
+          try {
+            const res = await axios.get(reqUrl)
+            window.location.href = `/app/0/download/folder?path=${res.data.file}&filename=${fileName}.zip`
+          } catch (e) {
+            alert(e)
+          }
+        }
+        fetch()
+      }
+    </script>
+  </head>
+  <body>
+    <input type="hidden" id="fileName" value="{{pathBase .path}}" />
+    <input type="hidden" id="reqUrl" value="/app/{{.id}}/download?path={{.path}}" />
+    {{template "navbar.html" .isAuth}}
+    <main class="container-xxl mt-4 text-center">
+      <div>Folder contents are being compressed</div>
+      <div>Do not leave the page, please wait a bit</div>
+    </main>
+  </body>
+</html>

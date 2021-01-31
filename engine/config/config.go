@@ -8,10 +8,10 @@ import (
 )
 
 type ConfigStruct struct {
-	Port      uint     `json:"port"`
-	JwtSecret string   `json:"jwtSecret"`
-	WhiteList []string `json:"whiteList"`
-	BlackList []string `json:"usingWhiteList"`
+	Name       string `json:"name"`
+	Port       uint   `json:"port"`
+	JwtSecret  string `json:"jwtSecret"`
+	EnableAuth bool   `json:"enableAuth"`
 }
 
 type UserStruct struct {
@@ -21,15 +21,21 @@ type UserStruct struct {
 }
 
 type FolderStruct struct {
-	Name       string   `json:"name"`
-	Path       string   `json:"path"`
-	AccessRole []string `json:"accessRole"`
+	ID          string   `json:"id"`
+	Name        string   `json:"name"`
+	Description string   `json:"description"`
+	Path        string   `json:"path"`
+	AccessRole  []string `json:"accessRole"`
 }
 
 var (
-	Config     ConfigStruct
-	UserList   []UserStruct
-	FolderList []FolderStruct
+	Config     *ConfigStruct
+	UserList   []*UserStruct
+	FolderList []*FolderStruct
+)
+
+var (
+	GuestUser *UserStruct
 )
 
 func GetConfigDir() string {
@@ -47,6 +53,11 @@ func GetConfigDir() string {
 }
 
 func Load(configDirPath string) error {
+	GuestUser = &UserStruct{
+		Name:     "Guest",
+		Password: "Guest",
+		Role:     []string{"Guest"},
+	}
 	config, err := ioutil.ReadFile(configDirPath + "config.json")
 	if err != nil {
 		return err
@@ -75,8 +86,31 @@ func Load(configDirPath string) error {
 func LoadUser(userName string) *UserStruct {
 	for _, v := range UserList {
 		if v.Name == userName {
-			return &v
+			return v
 		}
 	}
 	return nil
+}
+
+func LoadFolder(folderID string) *FolderStruct {
+	for _, v := range FolderList {
+		if v.ID == folderID {
+			return v
+		}
+	}
+	return nil
+}
+
+func CheckPermission(userRole *[]string, folderRole *[]string) bool {
+	if !Config.EnableAuth {
+		return true
+	}
+	for _, accessRole := range *folderRole {
+		for _, userRole := range *userRole {
+			if accessRole == userRole {
+				return true
+			}
+		}
+	}
+	return false
 }

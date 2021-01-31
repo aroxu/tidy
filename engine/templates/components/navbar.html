@@ -1,0 +1,9 @@
+<nav class="navbar navbar-dark bg-dark">
+  <div class="container-xxl flex justify-content-between">
+    <a class="navbar-brand" href="/app">{{ serviceName }}</a>
+
+    <input type="hidden" id="isAuth" value="{{.}}" />
+    {{if isAuthEnable }}
+    <button id="headerBtn" class="btn btn-outline-info">{{if .}}Sign Out{{else}}Sign In{{end}}</button>{{end}}
+  </div>
+</nav>
