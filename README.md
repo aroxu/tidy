@@ -1,6 +1,6 @@
 # Tidy
 
-Tiny Tidy WebServer with GUI / CLI. For WebServer / File Sharing purpose.
+Tiny Tidy WebServer with GUI / CLI for WebServer / File Sharing purpose.
 
 I would like to express my great thanks to [@gangjun06](https://github.com/gangjun06) for helping me to create the engine.
 

@@ -12,7 +12,6 @@ import (
 	"path/filepath"
 	"runtime"
 	"strconv"
-	"strings"
 	"time"
 
 	"github.com/aroxu/tidy-engine/config"
@@ -153,10 +152,46 @@ func main() {
 			}
 		}
 	}()
+	if runtime.GOOS != "windows" {
+		if !utils.AmIRoot() {
+			fmt.Println("Please run me again with root user or sudo")
+			return
+		}
+	}
 
+	status, _ := s.Status()
 	switch flag {
-	case "install", "uninstall", "start", "stop":
+	case "install":
 		if err := service.Control(s, flag); err != nil {
+			log.Fatal(err)
+		}
+		return
+	case "start":
+		if status == service.StatusStopped || status == service.StatusUnknown {
+			if err := service.Control(s, flag); err != nil {
+				log.Fatal(err)
+			}
+		} else {
+			log.Fatal("Process is already started")
+		}
+		return
+	case "stop":
+		if status == service.StatusRunning || status == service.StatusUnknown {
+			if err := service.Control(s, flag); err != nil {
+				log.Fatal(err)
+			}
+		} else {
+			log.Fatal("Process is already stopped")
+		}
+		return
+	case "uninstall":
+		if status == service.StatusRunning {
+			fmt.Println("Stopping service before uninstall...")
+			if err := service.Control(s, "stop"); err != nil {
+				log.Fatal(err)
+			}
+		}
+		if err = service.Control(s, flag); err != nil {
 			log.Fatal(err)
 		}
 		return
@@ -166,22 +201,14 @@ func main() {
 		}
 		return
 	case "status":
-		status, err := s.Status()
-		if err != nil {
-			if strings.Contains(err.Error(), "Could not find service") {
-				fmt.Println("Process is stopped or the service is not installed")
-				return
-			}
-			log.Fatal(err)
-		}
-		switch status {
-		case service.StatusRunning:
+		if status == service.StatusRunning {
 			fmt.Println("Process is running")
-		case service.StatusStopped:
+		} else if status == service.StatusStopped {
 			fmt.Println("Process is stopped")
+		} else {
+			fmt.Println("Process is stopped or the service is not installed")
 		}
 		return
-
 	case "dataDirPath":
 
 	default:
