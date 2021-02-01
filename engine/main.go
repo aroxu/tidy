@@ -123,7 +123,7 @@ func main() {
 		Name:        "TidyEngine",
 		DisplayName: "Tidy Engine",
 		Description: "Engine of tidy file share",
-		Arguments:   []string{"dataDirPath", dataDirPath, "--boot"},
+		Arguments:   []string{"dataDirPath", dataDirPath},
 		Option:      options,
 	}
 
