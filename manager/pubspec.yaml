@@ -24,9 +24,19 @@ dependencies:
   flutter:
     sdk: flutter
   simple_animations: ^2.2.2
+  json_annotation: ^2.0.0
+  dbcrypt: ^1.0.0
+  settings_ui: ^0.5.0
   process_run:
   path:
   archive:
+  flutter_phoenix:
+  http:
+  file_chooser:
+    git:
+      url: git://github.com/google/flutter-desktop-embedding.git
+      path: plugins/file_chooser
+      ref: 927f8cbc09b35d85245c095f2db8df9b186f6618
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.

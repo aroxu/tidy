@@ -69,7 +69,7 @@ func App(c *gin.Context) {
 	accessAbleFolderList := map[string]*config.FolderStruct{}
 	for _, d := range config.FolderList {
 		if hasPermission := config.CheckPermission(&userRole, &d.AccessRole); hasPermission {
-			accessAbleFolderList[d.Name] = d
+			accessAbleFolderList[d.ID] = d
 		}
 	}
 

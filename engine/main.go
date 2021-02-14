@@ -5,7 +5,6 @@ import (
 	"html/template"
 	"log"
 	"math/rand"
-	"net/http"
 	"net/url"
 	"os"
 	"path"
@@ -96,10 +95,6 @@ func (p *program) run(dataDirPath string) error {
 func (p *program) Stop(s service.Service) error {
 	close(p.exit)
 	return nil
-}
-
-func handler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "Hi there, I love %s!", r.URL.Path[1:])
 }
 
 func main() {
@@ -208,6 +203,9 @@ func main() {
 		} else {
 			fmt.Println("Process is stopped or the service is not installed")
 		}
+		return
+	case "version":
+		fmt.Println("0.0.1")
 		return
 	case "dataDirPath":
 
