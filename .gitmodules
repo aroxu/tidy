@@ -1,3 +1,0 @@
-[submodule "engine/service"]
-	path = engine/service
-	url = https://github.com/kardianos/service
